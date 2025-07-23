@@ -1,0 +1,40 @@
+﻿<div class="bg-light border col-6" @onclick="(e) => SelectedProductUpdated(e, product.Name)">
+	<h4 class="text-secondary">Product - @product.Id</h4>
+
+	<input type="checkbox" @onchange="FavoriteUpdated"/>Add to Favorites <br />
+
+	Name - @product.Name <br />
+	Show Properties: <input type="checkbox" @bind="product.IsActive" />
+
+	@if (product.IsActive)
+	{
+		@foreach (var prodProp in product.ProductProperties!)
+		{
+			<p>@prodProp.Key - @prodProp.Value</p>
+		}
+	}
+	<br />
+	<_DeleteButtonComponent productId="product">
+	</_DeleteButtonComponent>
+</div>
+
+@code {
+	[Parameter]
+	public Product product { get; set; }
+
+	[Parameter]
+	public EventCallback<bool> OnFavoriteUpdated { get; set; }
+
+	[Parameter]
+	public EventCallback<string> OnSelectedProductUpdated { get; set; }
+
+	private async Task FavoriteUpdated(ChangeEventArgs e)
+	{
+		await OnFavoriteUpdated.InvokeAsync((bool)(e.Value??false));
+	}
+
+	private async Task SelectedProductUpdated(MouseEventArgs e, string productName)
+	{
+		await OnSelectedProductUpdated.InvokeAsync(productName);
+	}
+}

@@ -1,0 +1,68 @@
+﻿@page "/lyfecycle"
+
+<PageTitle>LifeCycle</PageTitle>
+
+<h3 class="text-success">Blazor Life Cycle</h3>
+
+<p role="status">Current Count: @currentCount</p>
+<button class="btn btn-primary" @onclick="IncrementCount">Click Me</button>
+
+<div class="border">
+	<_LifeCycleChildComponent CountValue="@currentCount"></_LifeCycleChildComponent>
+</div>
+
+@foreach (var item in EventType)
+{
+	<p>@item</p>
+	<hr />
+}
+
+@code {
+	private int currentCount = 0;
+
+	List<string> EventType = new List<string>();
+
+	private void IncrementCount()
+	{
+		currentCount++;
+	}
+
+	protected override void OnInitialized()
+	{
+		EventType.Add("OnInitialized called");
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		EventType.Add("OnInitializedAsync called");
+	}
+
+	protected override void OnParametersSet()
+	{
+		EventType.Add("OnParametersSet called");
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		EventType.Add("OnParametersSetAsync called");
+	}
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			currentCount = 100;
+		}
+		else
+		{
+			currentCount = 200;
+		}
+		EventType.Add("OnAfterRender called");
+
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		EventType.Add("OnAfterRenderAsync called");
+	}
+}
